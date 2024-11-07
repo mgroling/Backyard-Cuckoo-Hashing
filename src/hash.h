@@ -4,19 +4,7 @@
 #include <array>
 #include <cstdint>
 #include <random>
-
-constexpr size_t num_primes = 10;
-static const std::array<uint64_t, num_primes> large_primes = {
-    96249602706718843UL,
-    16195944769656221UL,
-    61243980399666923UL,
-    91165090352484931UL,
-    70653361301029763UL,
-    17239878924401069UL,
-    26263798480984763UL,
-    34752750108724387UL,
-    78183116390846231UL,
-    99471240469200793UL};
+#include "large_primes.h"
 
 uint64_t sample_prime()
 {
@@ -31,6 +19,10 @@ template <typename T>
 class PairwiseIndependentHashFunction
 {
 public:
+    virtual void set_range(uint64_t m) = 0;
+
+    virtual void randomize_parameters() = 0;
+
     virtual uint64_t hash(const T &item) = 0;
 };
 
@@ -40,6 +32,16 @@ class PairwiseIndependentHashFunction<uint64_t>
 {
 public:
     PairwiseIndependentHashFunction()
+    {
+        randomize_parameters();
+    }
+
+    void set_range(uint64_t m)
+    {
+        this->m = m;
+    }
+
+    void randomize_parameters()
     {
         p = sample_prime();
         std::random_device rd;
@@ -51,11 +53,11 @@ public:
 
     uint64_t hash(const uint64_t &item)
     {
-        return ((a * item + b) % p);
+        return ((a * item + b) % p) % m;
     }
 
 private:
-    uint64_t a, b, p;
+    uint64_t a, b, p, m;
 };
 
 #endif
