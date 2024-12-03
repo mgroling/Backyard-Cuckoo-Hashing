@@ -184,7 +184,7 @@ private:
         {
             items.push_back(item);
         }
-        // collect all present elements in the datastructure and set them as deleted
+        // collect all present elements in the data structure and set them as deleted
         if (head)
         {
             Node<T> *node = head;
