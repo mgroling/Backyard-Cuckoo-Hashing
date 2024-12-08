@@ -1,7 +1,8 @@
 #include <cassert>
+#include <cstdint>
 #include "../src/queue.h"
 
-void test_push_back()
+void test_queue_push_back()
 {
     ConstantTimeQueue<uint64_t, 10, 3> queue = ConstantTimeQueue<uint64_t, 10, 3>();
     queue.push_back(1);
@@ -13,7 +14,7 @@ void test_push_back()
     assert(queue.contains(3));
 }
 
-void test_push_front()
+void test_queue_push_front()
 {
     ConstantTimeQueue<uint64_t, 10, 3> queue = ConstantTimeQueue<uint64_t, 10, 3>();
     queue.push_front(1);
@@ -25,7 +26,7 @@ void test_push_front()
     assert(queue.contains(3));
 }
 
-void test_pop_front()
+void test_queue_pop_front()
 {
     ConstantTimeQueue<uint64_t, 10, 3> queue = ConstantTimeQueue<uint64_t, 10, 3>();
     queue.push_back(1);
@@ -41,7 +42,7 @@ void test_pop_front()
     assert(queue.empty());                           // Queue should be empty after popping all items
 }
 
-void test_contains()
+void test_queue_contains()
 {
     ConstantTimeQueue<uint64_t, 10, 3> queue = ConstantTimeQueue<uint64_t, 10, 3>();
     queue.push_back(5);
@@ -52,7 +53,7 @@ void test_contains()
     assert(!queue.contains(1)); // Item 1 was never added
 }
 
-void test_remove()
+void test_queue_remove()
 {
     ConstantTimeQueue<uint64_t, 10, 3> queue = ConstantTimeQueue<uint64_t, 10, 3>();
     queue.push_back(10);
@@ -64,7 +65,7 @@ void test_remove()
     assert(queue.contains(20));  // 20 should still be in the queue
 }
 
-void test_empty()
+void test_queue_empty()
 {
     ConstantTimeQueue<uint64_t, 10, 3> queue = ConstantTimeQueue<uint64_t, 10, 3>();
     assert(queue.empty()); // Queue should be empty initially
@@ -76,7 +77,7 @@ void test_empty()
     assert(queue.empty()); // Queue should be empty after removing the only element
 }
 
-void test_rebuild()
+void test_queue_rebuild()
 {
     ConstantTimeQueue<uint64_t, 2, 3> queue = ConstantTimeQueue<uint64_t, 2, 3>();
     // Fill the queue to the max, which will very likely force multiple rebuilds

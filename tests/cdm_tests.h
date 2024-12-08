@@ -1,7 +1,9 @@
 #include <cassert>
+#include <cstddef>
+#include <cstdint>
 #include "../src/cdm.h"
 
-void test_insert_and_contains()
+void test_cdm_insert_and_contains()
 {
     CycleDetectionMechanism<uint64_t, 3, 5, 3> cdm;
 
@@ -16,7 +18,7 @@ void test_insert_and_contains()
     assert(!cdm.contains(99)); // Element not inserted
 }
 
-void test_rebuild_trigger()
+void test_cdm_rebuild_trigger()
 {
     CycleDetectionMechanism<uint64_t, 9, 3, 3> cdm;
 
@@ -36,7 +38,7 @@ void test_rebuild_trigger()
     assert(!cdm.contains(20));
 }
 
-void test_reset()
+void test_cdm_reset()
 {
     CycleDetectionMechanism<uint64_t, 10, 5, 3> cdm;
 
@@ -61,7 +63,7 @@ void test_reset()
     assert(cdm.contains(13));
 }
 
-void test_empty()
+void test_cdm_empty()
 {
     CycleDetectionMechanism<uint64_t, 10, 5, 3> cdm;
 
@@ -73,7 +75,7 @@ void test_empty()
     assert(!cdm.empty());
 }
 
-void test_duplicate_inserts()
+void test_cdm_duplicate_inserts()
 {
     CycleDetectionMechanism<uint64_t, 10, 5, 3> cdm;
 
@@ -93,7 +95,7 @@ void test_duplicate_inserts()
     assert(!cdm.contains(13));
 }
 
-void test_alternating_inserts_and_resets()
+void test_cdm_alternating_inserts_and_resets()
 {
     CycleDetectionMechanism<uint64_t, 10, 5, 3> cdm;
 

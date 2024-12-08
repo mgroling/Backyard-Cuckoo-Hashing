@@ -2,20 +2,19 @@
 #define cdm_
 
 #include <cstddef>
-#include <optional>
 #include <array>
 #include <vector>
 
 #include "hash.h"
 
 template <typename T>
-class Node
+class CdmNode
 {
 public:
     T data;
     int *points_to;
 
-    Node()
+    CdmNode()
     {
         points_to = nullptr;
     }
@@ -33,7 +32,7 @@ public:
         }
     }
 
-    void insert(T item)
+    void insert(const T &item)
     {
         if (contains(item))
         {
@@ -46,7 +45,7 @@ public:
         {
             int position = get_position(i, h[i].hash(item));
             int *a = &(arrays[position]);
-            Node<T> b = elements[*a];
+            CdmNode<T> b = elements[*a];
 
             // this spot is empty
             if (b.points_to != a || *a >= members)
@@ -63,13 +62,13 @@ public:
         rebuild(item);
     }
 
-    bool contains(T item)
+    bool contains(const T &item)
     {
         for (int i = 0; i < k; ++i)
         {
             int position = get_position(i, h[i].hash(item));
             int *a = &(arrays[position]);
-            Node<T> b = elements[*a];
+            CdmNode<T> b = elements[*a];
 
             if (b.points_to == a && b.data == item && *a < members)
             {
@@ -92,7 +91,7 @@ public:
 
 private:
     int members = 0;
-    std::array<Node<T>, num_elements> elements;
+    std::array<CdmNode<T>, num_elements> elements;
     std::array<int, k * n> arrays = {0};
     std::array<PairwiseIndependentHashFunction<T>, k> h;
 
@@ -101,7 +100,7 @@ private:
         return num_array * n + array_index;
     }
 
-    void rebuild(T item)
+    void rebuild(const T &item)
     {
         std::vector<T> items;
         items.push_back(item);

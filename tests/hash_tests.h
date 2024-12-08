@@ -1,8 +1,10 @@
 #include <cassert>
+#include <cstddef>
+#include <cstdint>
 #include <unordered_set>
 #include "../src/hash.h"
 
-void test_set_range()
+void test_hash_set_range()
 {
     PairwiseIndependentHashFunction<uint64_t> hash_func = PairwiseIndependentHashFunction<uint64_t>();
     hash_func.set_range(100); // Set the range to 100
@@ -13,7 +15,7 @@ void test_set_range()
     assert(hash_value < 100); // Ensure hash value is within the specified range
 }
 
-void test_randomize_parameters()
+void test_hash_randomize_parameters()
 {
     PairwiseIndependentHashFunction<uint64_t> hash_func = PairwiseIndependentHashFunction<uint64_t>();
     hash_func.set_range(1000000000000UL); // Set the range for consistent comparison
@@ -29,7 +31,7 @@ void test_randomize_parameters()
     assert(first_hash != second_hash);
 }
 
-void test_hash_distribution()
+void test_hash_hash_distribution()
 {
     PairwiseIndependentHashFunction<uint64_t> hash_func = PairwiseIndependentHashFunction<uint64_t>();
     hash_func.set_range(100); // Setting range to 100 to observe distribution
@@ -44,7 +46,7 @@ void test_hash_distribution()
     assert(unique_hashes.size() > 50); // Arbitrary threshold for uniqueness
 }
 
-void test_collision_rate()
+void test_hash_collision_rate()
 {
     PairwiseIndependentHashFunction<uint64_t> hash_func = PairwiseIndependentHashFunction<uint64_t>();
     hash_func.set_range(10); // Small range to induce collisions

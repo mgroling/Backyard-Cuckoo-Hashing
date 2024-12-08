@@ -9,20 +9,20 @@
 #include "hash.h"
 
 template <typename T>
-class Node
+class QueueNode
 {
 public:
     T data;
-    Node<T> *prev = nullptr;
-    Node<T> *next = nullptr;
+    QueueNode<T> *prev = nullptr;
+    QueueNode<T> *next = nullptr;
     bool deleted;
 
-    Node()
+    QueueNode()
     {
         deleted = true;
     }
 
-    Node(T data) : data(data)
+    QueueNode(T data) : data(data)
     {
         deleted = false;
     }
@@ -40,7 +40,7 @@ public:
         }
     }
 
-    void push_back(T item)
+    void push_back(const T &item)
     {
         // find an empty spot for the element from the following options:
         // {A_1[h_1(item)], A_2[h_2(item)], .., A_k[h_k(item)]}
@@ -49,7 +49,7 @@ public:
             int position = get_position(i, h[i].hash(item));
             if (arrays[position].deleted)
             {
-                arrays[position] = Node<T>(item);
+                arrays[position] = QueueNode<T>(item);
 
                 if (tail)
                 {
@@ -69,7 +69,7 @@ public:
         rebuild(item, false);
     }
 
-    void push_front(T item)
+    void push_front(const T &item)
     {
         // find an empty spot for the element from the following options:
         // {A_1[h_1(item)], A_2[h_2(item)], .., A_k[h_k(item)]}
@@ -78,7 +78,7 @@ public:
             int position = get_position(i, h[i].hash(item));
             if (arrays[position].deleted)
             {
-                arrays[position] = Node<T>(item);
+                arrays[position] = QueueNode<T>(item);
 
                 if (head)
                 {
@@ -122,7 +122,7 @@ public:
         return item;
     }
 
-    bool contains(T item)
+    bool contains(const T &item)
     {
         for (int i = 0; i < k; ++i)
         {
@@ -136,23 +136,23 @@ public:
         return false;
     }
 
-    bool remove(T item)
+    bool remove(const T &item)
     {
         for (int i = 0; i < k; ++i)
         {
             int position = get_position(i, h[i].hash(item));
             if (!arrays[position].deleted && arrays[position].data == item)
             {
-                Node<T> *node = &arrays[position];
-                node->deleted = true;
+                QueueNode<T> *QueueNode = &arrays[position];
+                QueueNode->deleted = true;
 
-                if (node->prev)
+                if (QueueNode->prev)
                 {
-                    node->prev->next = node->next;
+                    QueueNode->prev->next = QueueNode->next;
                 }
-                if (node->next)
+                if (QueueNode->next)
                 {
-                    node->next->prev = node->prev;
+                    QueueNode->next->prev = QueueNode->prev;
                 }
                 return true;
             }
@@ -167,17 +167,17 @@ public:
     }
 
 private:
-    std::array<Node<T>, k * n> arrays;
+    std::array<QueueNode<T>, k * n> arrays;
     std::array<PairwiseIndependentHashFunction<T>, k> h;
-    Node<T> *head = nullptr;
-    Node<T> *tail = nullptr;
+    QueueNode<T> *head = nullptr;
+    QueueNode<T> *tail = nullptr;
 
     int get_position(int num_array, int array_index)
     {
         return num_array * n + array_index;
     }
 
-    void rebuild(T item, bool place_at_front)
+    void rebuild(const T &item, bool place_at_front)
     {
         std::vector<T> items;
         if (place_at_front)
@@ -187,14 +187,14 @@ private:
         // collect all present elements in the data structure and set them as deleted
         if (head)
         {
-            Node<T> *node = head;
-            node->deleted = true;
-            items.push_back(node->data);
-            while (node->next)
+            QueueNode<T> *QueueNode = head;
+            QueueNode->deleted = true;
+            items.push_back(QueueNode->data);
+            while (QueueNode->next)
             {
-                node = node->next;
-                node->deleted = true;
-                items.push_back(node->data);
+                QueueNode = QueueNode->next;
+                QueueNode->deleted = true;
+                items.push_back(QueueNode->data);
             }
         }
         if (!place_at_front)
