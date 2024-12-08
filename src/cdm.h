@@ -62,7 +62,7 @@ public:
         rebuild(item);
     }
 
-    bool contains(const T &item)
+    bool contains(const T &item) const
     {
         for (int i = 0; i < k; ++i)
         {
@@ -84,7 +84,7 @@ public:
         members = 0;
     }
 
-    bool empty()
+    bool empty() const
     {
         return !members;
     }

@@ -122,7 +122,7 @@ public:
         return item;
     }
 
-    bool contains(const T &item)
+    bool contains(const T &item) const
     {
         for (int i = 0; i < k; ++i)
         {
@@ -161,7 +161,7 @@ public:
         return false;
     }
 
-    bool empty()
+    bool empty() const
     {
         return head == nullptr;
     }

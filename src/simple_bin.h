@@ -58,6 +58,11 @@ public:
         return num_elems;
     }
 
+    bool has_space() const
+    {
+        return num_elems < capacity;
+    }
+
 private:
     std::array<T, capacity> elems;
     std::array<bool, capacity> deleted;
