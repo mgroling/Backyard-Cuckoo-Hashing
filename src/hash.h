@@ -62,7 +62,7 @@ private:
 
 // Specialization for (y, b) pairs
 template <>
-class PairwiseIndependentHashFunction<std::pair<uint64_t, uint8_t>>
+class PairwiseIndependentHashFunction<std::pair<uint64_t, bool>>
 {
 public:
     PairwiseIndependentHashFunction()

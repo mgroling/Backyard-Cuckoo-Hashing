@@ -172,7 +172,7 @@ private:
     QueueNode<T> *head = nullptr;
     QueueNode<T> *tail = nullptr;
 
-    int get_position(int num_array, int array_index)
+    int get_position(int num_array, int array_index) const
     {
         return num_array * n + array_index;
     }

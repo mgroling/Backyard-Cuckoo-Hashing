@@ -21,15 +21,16 @@ public:
 };
 
 template <typename T, int num_elements, int n, int k>
-class CycleDetectionMechanism
+class ConstantTimeCollection
 {
 public:
-    CycleDetectionMechanism()
+    ConstantTimeCollection()
     {
         for (int i = 0; i < k; ++i)
         {
             h[i].set_range(n);
         }
+        arrays.fill(0);
     }
 
     void insert(const T &item)
@@ -66,9 +67,12 @@ public:
     {
         for (int i = 0; i < k; ++i)
         {
-            int position = get_position(i, h[i].hash(item));
-            int *a = &(arrays[position]);
-            CdmNode<T> b = elements[*a];
+            const int position = get_position(i, h[i].hash(item));
+            const int *a = &(arrays[position]);
+            // somehow I can get a seg fault here
+            // somehow there can be arbitrary elements in the variable arrays (large ones and negative ones)
+            // this happens if elements overflows (more elements in the collection that it was intialized with)
+            const CdmNode<T> b = elements[*a];
 
             if (b.points_to == a && b.data == item && *a < members)
             {
@@ -92,10 +96,10 @@ public:
 private:
     int members = 0;
     std::array<CdmNode<T>, num_elements> elements;
-    std::array<int, k * n> arrays = {0};
+    std::array<int, k * n> arrays;
     std::array<PairwiseIndependentHashFunction<T>, k> h;
 
-    int get_position(int num_array, int array_index)
+    int get_position(int num_array, int array_index) const
     {
         return num_array * n + array_index;
     }
@@ -103,6 +107,7 @@ private:
     void rebuild(const T &item)
     {
         std::vector<T> items;
+        items.reserve(members + 1);
         items.push_back(item);
         // collect all present elements in the data structure
         for (int i = 0; i < members; i++)
@@ -123,6 +128,45 @@ private:
             insert(elem);
         }
     }
+};
+
+template <typename T, int num_elements, int n, int k>
+class CycleDetectionMechanism
+{
+public:
+    CycleDetectionMechanism()
+    {
+        collection = ConstantTimeCollection<T, num_elements, n, k>();
+    }
+
+    void insert(const T &item)
+    {
+        collection.insert(item);
+    }
+
+    // only returns true once lookup on the collection returned true at least one times
+    bool contains(const T &item)
+    {
+        if (collection.contains(item))
+        {
+            if (duplicate)
+            {
+                return true;
+            }
+            duplicate = true;
+        }
+        return false;
+    }
+
+    void reset()
+    {
+        collection.reset();
+        duplicate = false;
+    }
+
+private:
+    ConstantTimeCollection<T, num_elements, n, k> collection;
+    bool duplicate = false;
 };
 
 #endif

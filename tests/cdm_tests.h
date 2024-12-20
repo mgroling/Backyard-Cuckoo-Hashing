@@ -3,121 +3,178 @@
 #include <cstdint>
 #include "../src/cdm.h"
 
-void test_cdm_insert_and_contains()
+void test_cdm_insert_and_contains_three_times_checked()
 {
-    CycleDetectionMechanism<uint64_t, 3, 5, 3> cdm;
+    CycleDetectionMechanism<std::pair<uint64_t, bool>, 5, 5, 3> cdm;
 
-    // Insert elements and check if they are contained in the cdm
-    cdm.insert(42);
-    cdm.insert(13);
-    cdm.insert(7);
-
-    assert(cdm.contains(42));
-    assert(cdm.contains(13));
-    assert(cdm.contains(7));
-    assert(!cdm.contains(99)); // Element not inserted
+    assert(!cdm.contains({1, true}));
+    cdm.insert({1, true});
+    assert(!cdm.contains({2, false}));
+    cdm.insert({2, false});
+    assert(!cdm.contains({1, true})); // first time this element is checked (when present), so should still be false
+    cdm.insert({1, true});
+    assert(!cdm.contains({3, true}));
+    cdm.insert({1, true});
+    assert(cdm.contains({1, true}));
 }
 
-void test_cdm_rebuild_trigger()
+void test_cdm_insert_and_contains_two_times_checked()
 {
-    CycleDetectionMechanism<uint64_t, 9, 3, 3> cdm;
+    CycleDetectionMechanism<std::pair<uint64_t, bool>, 5, 5, 3> cdm;
 
-    // Fill the cdm to the max, which will very likely force multiple rebuilds
+    assert(!cdm.contains({1, true}));
+    cdm.insert({1, true});
+    assert(!cdm.contains({2, false}));
+    cdm.insert({2, false});
+    assert(!cdm.contains({1, true})); // first time this element is checked (when present), so should still be false
+    cdm.insert({1, true});
+    assert(!cdm.contains({3, true}));
+    cdm.insert({1, true});
+    assert(cdm.contains({2, false}));
+}
+
+void test_cdm_reset()
+{
+    CycleDetectionMechanism<std::pair<uint64_t, bool>, 5, 5, 3> cdm;
+
+    assert(!cdm.contains({1, true}));
+    cdm.insert({1, true});
+    assert(!cdm.contains({2, false}));
+    cdm.insert({2, false});
+    assert(!cdm.contains({1, true})); // first time this element is checked (when present), so should still be false
+    cdm.insert({1, true});
+    assert(!cdm.contains({3, true}));
+    cdm.insert({1, true});
+    assert(cdm.contains({1, true}));
+
+    cdm.reset();
+
+    assert(!cdm.contains({1, true}));
+    cdm.insert({1, true});
+    assert(!cdm.contains({2, false}));
+    cdm.insert({2, false});
+    assert(!cdm.contains({1, true})); // first time this element is checked (when present), so should still be false
+    cdm.insert({1, true});
+    assert(!cdm.contains({3, true}));
+    cdm.insert({1, true});
+    assert(cdm.contains({2, false}));
+}
+
+void test_collection_insert_and_contains()
+{
+    ConstantTimeCollection<uint64_t, 3, 5, 3> collection;
+
+    // Insert elements and check if they are contained in the collection
+    collection.insert(42);
+    collection.insert(13);
+    collection.insert(7);
+
+    assert(collection.contains(42));
+    assert(collection.contains(13));
+    assert(collection.contains(7));
+    assert(!collection.contains(99)); // Element not inserted
+}
+
+void test_collection_rebuild_trigger()
+{
+    ConstantTimeCollection<uint64_t, 9, 3, 3> collection;
+
+    // Fill the collection to the max, which will very likely force multiple rebuilds
     for (uint64_t i = 0; i < 9; ++i)
     {
-        cdm.insert(i);
+        collection.insert(i);
     }
 
     // Check that all inserted elements are present
     for (uint64_t i = 0; i < 9; ++i)
     {
-        assert(cdm.contains(i));
+        assert(collection.contains(i));
     }
 
-    // Ensure an element not in the cdm is still not found
-    assert(!cdm.contains(20));
+    // Ensure an element not in the collection is still not found
+    assert(!collection.contains(20));
 }
 
-void test_cdm_reset()
+void test_collection_recollection()
 {
-    CycleDetectionMechanism<uint64_t, 10, 5, 3> cdm;
+    ConstantTimeCollection<uint64_t, 10, 5, 3> collection;
 
     // Insert some elements
-    cdm.insert(42);
-    cdm.insert(13);
+    collection.insert(42);
+    collection.insert(13);
 
-    // Reset the data structure
-    cdm.reset();
+    // Recollection the data structure
+    collection.reset();
 
-    // Check that the cdm is empty
-    assert(cdm.empty());
-    assert(!cdm.contains(42));
-    assert(!cdm.contains(13));
+    // Check that the collection is empty
+    assert(collection.empty());
+    assert(!collection.contains(42));
+    assert(!collection.contains(13));
 
     // Insert some elements
-    cdm.insert(51);
-    cdm.insert(13);
+    collection.insert(51);
+    collection.insert(13);
 
-    assert(!cdm.empty());
-    assert(cdm.contains(51));
-    assert(cdm.contains(13));
+    assert(!collection.empty());
+    assert(collection.contains(51));
+    assert(collection.contains(13));
 }
 
-void test_cdm_empty()
+void test_collection_empty()
 {
-    CycleDetectionMechanism<uint64_t, 10, 5, 3> cdm;
+    ConstantTimeCollection<uint64_t, 10, 5, 3> collection;
 
-    // Initially, the cdm should be empty
-    assert(cdm.empty());
+    // Initially, the collection should be empty
+    assert(collection.empty());
 
     // Insert an element and check that it's no longer empty
-    cdm.insert(1);
-    assert(!cdm.empty());
+    collection.insert(1);
+    assert(!collection.empty());
 }
 
 void test_cdm_duplicate_inserts()
 {
-    CycleDetectionMechanism<uint64_t, 10, 5, 3> cdm;
+    ConstantTimeCollection<uint64_t, 10, 5, 3> collection;
 
     // Insert the same element multiple times
-    cdm.insert(42);
-    cdm.insert(42);
-    cdm.insert(42);
+    collection.insert(42);
+    collection.insert(42);
+    collection.insert(42);
 
     // Ensure the element is only present once and no issues arise
-    assert(cdm.contains(42));
+    assert(collection.contains(42));
 
     // Check the structure remains functional
-    cdm.insert(13);
-    assert(cdm.contains(13));
-    cdm.reset();
-    assert(!cdm.contains(42));
-    assert(!cdm.contains(13));
+    collection.insert(13);
+    assert(collection.contains(13));
+    collection.reset();
+    assert(!collection.contains(42));
+    assert(!collection.contains(13));
 }
 
-void test_cdm_alternating_inserts_and_resets()
+void test_collection_alternating_inserts_and_recollections()
 {
-    CycleDetectionMechanism<uint64_t, 10, 5, 3> cdm;
+    ConstantTimeCollection<uint64_t, 10, 5, 3> collection;
 
     for (int round = 0; round < 5; ++round)
     {
         // Insert elements in each round
         for (uint64_t i = 0; i < 5; ++i)
         {
-            cdm.insert(i + round * 10);
+            collection.insert(i + round * 10);
         }
 
         // Verify elements
         for (uint64_t i = 0; i < 5; ++i)
         {
-            assert(cdm.contains(i + round * 10));
+            assert(collection.contains(i + round * 10));
         }
 
-        // Reset and ensure it's empty
-        cdm.reset();
+        // Recollection and ensure it's empty
+        collection.reset();
         for (uint64_t i = 0; i < 5; ++i)
         {
-            assert(!cdm.contains(i + round * 10));
+            assert(!collection.contains(i + round * 10));
         }
     }
 }
