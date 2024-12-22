@@ -168,7 +168,7 @@ public:
 
 private:
     std::array<QueueNode<T>, k * n> arrays;
-    std::array<PairwiseIndependentHashFunction<T>, k> h;
+    std::array<CarterWegmanHash<T>, k> h;
     QueueNode<T> *head = nullptr;
     QueueNode<T> *tail = nullptr;
 

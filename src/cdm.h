@@ -97,7 +97,7 @@ private:
     int members = 0;
     std::array<CdmNode<T>, num_elements> elements;
     std::array<int, k * n> arrays;
-    std::array<PairwiseIndependentHashFunction<T>, k> h;
+    std::array<CarterWegmanHash<T>, k> h;
 
     int get_position(int num_array, int array_index) const
     {

@@ -154,9 +154,9 @@ public:
 private:
     ConstantTimeQueue<std::pair<T, bool>, n_queue, k_queue> queue;
     ConstantTimeCollection<std::pair<T, bool>, num_elems_cdm, n_cdm, k_cdm> cdm;
-    PairwiseIndependentHashFunction<uint64_t> bins_h;
+    TornadoHash<T> bins_h;
     std::array<SimpleBin<T, bin_capacity>, num_bins> bins;
-    std::array<PairwiseIndependentHashFunction<uint64_t>, 2> cuckoo_tables_h;
+    std::array<TornadoHash<T>, 2> cuckoo_tables_h;
     std::array<std::array<std::optional<T>, size_cuckoo_tables>, 2> cuckoo_tables;
     int insert_loop_iterations;
 };

@@ -6,7 +6,7 @@
 
 void test_hash_set_range()
 {
-    PairwiseIndependentHashFunction<uint64_t> hash_func = PairwiseIndependentHashFunction<uint64_t>();
+    CarterWegmanHash<uint64_t> hash_func = CarterWegmanHash<uint64_t>();
     hash_func.set_range(100); // Set the range to 100
 
     uint64_t value = 42;
@@ -17,7 +17,7 @@ void test_hash_set_range()
 
 void test_hash_randomize_parameters()
 {
-    PairwiseIndependentHashFunction<uint64_t> hash_func = PairwiseIndependentHashFunction<uint64_t>();
+    CarterWegmanHash<uint64_t> hash_func = CarterWegmanHash<uint64_t>();
     hash_func.set_range(1000000000000UL); // Set the range for consistent comparison
 
     uint64_t value = 12345;
@@ -33,7 +33,7 @@ void test_hash_randomize_parameters()
 
 void test_hash_hash_distribution()
 {
-    PairwiseIndependentHashFunction<uint64_t> hash_func = PairwiseIndependentHashFunction<uint64_t>();
+    CarterWegmanHash<uint64_t> hash_func = CarterWegmanHash<uint64_t>();
     hash_func.set_range(100); // Setting range to 100 to observe distribution
 
     std::unordered_set<uint64_t> unique_hashes;
@@ -48,7 +48,7 @@ void test_hash_hash_distribution()
 
 void test_hash_collision_rate()
 {
-    PairwiseIndependentHashFunction<uint64_t> hash_func = PairwiseIndependentHashFunction<uint64_t>();
+    CarterWegmanHash<uint64_t> hash_func = CarterWegmanHash<uint64_t>();
     hash_func.set_range(10); // Small range to induce collisions
 
     std::unordered_set<uint64_t> hash_values;

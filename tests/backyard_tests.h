@@ -6,7 +6,7 @@
 void test_backyard_insert_and_contains()
 {
     // Create an instance of the BackyardCuckooHashing class
-    BackyardCuckooHashing<uint64_t, 5, 2, 4, 5, 3, 10, 5, 3> dictionary(5);
+    BackyardCuckooHashing<uint32_t, 5, 2, 4, 5, 3, 10, 5, 3> dictionary(5);
 
     // Insert elements and check if they are contained
     dictionary.insert(42);
@@ -21,7 +21,7 @@ void test_backyard_insert_and_contains()
 
 void test_backyard_remove()
 {
-    BackyardCuckooHashing<uint64_t, 5, 2, 4, 5, 3, 10, 5, 3> dictionary(5);
+    BackyardCuckooHashing<uint32_t, 5, 2, 4, 5, 3, 10, 5, 3> dictionary(5);
 
     // Insert elements
     dictionary.insert(42);
@@ -38,16 +38,16 @@ void test_backyard_remove()
 
 void test_backyard_overflow_handling()
 {
-    BackyardCuckooHashing<uint64_t, 5, 2, 4, 5, 3, 10, 5, 3> dictionary(5);
+    BackyardCuckooHashing<uint32_t, 5, 2, 4, 5, 3, 10, 5, 3> dictionary(5);
 
     // Insert more elements than the bins can handle
-    for (uint64_t i = 0; i < 15; ++i)
+    for (uint32_t i = 0; i < 15; ++i)
     {
         dictionary.insert(i);
     }
 
     // Check that all inserted elements are contained
-    for (uint64_t i = 0; i < 15; ++i)
+    for (uint32_t i = 0; i < 15; ++i)
     {
         assert(dictionary.contains(i));
     }
@@ -58,7 +58,7 @@ void test_backyard_overflow_handling()
 
 void test_backyard_alternating_operations()
 {
-    BackyardCuckooHashing<uint64_t, 5, 2, 4, 5, 3, 10, 5, 3> dictionary(5);
+    BackyardCuckooHashing<uint32_t, 5, 2, 4, 5, 3, 10, 5, 3> dictionary(5);
 
     // Perform alternating insertions and removals
     dictionary.insert(10);
@@ -82,7 +82,7 @@ void test_backyard_alternating_operations()
 
 void test_backyard_reset_behavior()
 {
-    BackyardCuckooHashing<uint64_t, 5, 2, 4, 5, 3, 10, 5, 3> dictionary(5);
+    BackyardCuckooHashing<uint32_t, 5, 2, 4, 5, 3, 10, 5, 3> dictionary(5);
 
     // Insert some elements
     dictionary.insert(1);

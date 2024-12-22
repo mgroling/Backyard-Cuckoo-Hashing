@@ -5,7 +5,7 @@
 
 void test_cdm_insert_and_contains_three_times_checked()
 {
-    CycleDetectionMechanism<std::pair<uint64_t, bool>, 5, 5, 3> cdm;
+    CycleDetectionMechanism<std::pair<uint32_t, bool>, 5, 5, 3> cdm;
 
     assert(!cdm.contains({1, true}));
     cdm.insert({1, true});
@@ -20,7 +20,7 @@ void test_cdm_insert_and_contains_three_times_checked()
 
 void test_cdm_insert_and_contains_two_times_checked()
 {
-    CycleDetectionMechanism<std::pair<uint64_t, bool>, 5, 5, 3> cdm;
+    CycleDetectionMechanism<std::pair<uint32_t, bool>, 5, 5, 3> cdm;
 
     assert(!cdm.contains({1, true}));
     cdm.insert({1, true});
@@ -35,7 +35,7 @@ void test_cdm_insert_and_contains_two_times_checked()
 
 void test_cdm_reset()
 {
-    CycleDetectionMechanism<std::pair<uint64_t, bool>, 5, 5, 3> cdm;
+    CycleDetectionMechanism<std::pair<uint32_t, bool>, 5, 5, 3> cdm;
 
     assert(!cdm.contains({1, true}));
     cdm.insert({1, true});
