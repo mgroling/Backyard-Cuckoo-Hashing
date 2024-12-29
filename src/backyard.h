@@ -66,7 +66,7 @@ public:
         {
             return true;
         }
-        uint64_t hash = cuckoo_tables_h[0].hash(item);
+        uint32_t hash = cuckoo_tables_h[0].hash(item);
         if (cuckoo_tables[0][hash] == item)
         {
             cuckoo_tables[0][hash].reset();
@@ -94,7 +94,7 @@ public:
         queue.push_back({item, true});
         std::optional<T> y;
         bool b = true;
-        uint64_t hash = 0;
+        uint32_t hash = 0;
         for (int i = 0; i < insert_loop_iterations; ++i)
         {
             if (!y.has_value())

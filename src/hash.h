@@ -23,7 +23,7 @@ public:
 
     virtual void randomize_parameters() = 0;
 
-    virtual uint64_t hash(const T &item) const = 0;
+    virtual uint32_t hash(const T &item) const = 0;
 };
 
 // Specialization for uint64_t
@@ -36,7 +36,7 @@ public:
         randomize_parameters();
     }
 
-    void set_range(uint64_t m)
+    void set_range(uint32_t m)
     {
         this->m = m;
     }
@@ -51,13 +51,14 @@ public:
         b = dist(gen);
     }
 
-    uint64_t hash(const uint64_t &item) const
+    uint32_t hash(const uint64_t &item) const
     {
         return ((a * item + b) % p) % m;
     }
 
 private:
-    uint64_t a, b, p, m;
+    uint32_t m;
+    uint64_t a, b, p;
 };
 
 // Specialization for uint32_t
@@ -70,7 +71,7 @@ public:
         randomize_parameters();
     }
 
-    void set_range(uint64_t m)
+    void set_range(uint32_t m)
     {
         this->m = m;
     }
@@ -85,13 +86,14 @@ public:
         b = dist(gen);
     }
 
-    uint64_t hash(const uint32_t &item) const
+    uint32_t hash(const uint32_t &item) const
     {
         return ((a * item + b) % p) % m;
     }
 
 private:
-    uint64_t a, b, p, m;
+    uint32_t m;
+    uint64_t a, b, p;
 };
 
 // Specialization for (y, b) pairs
@@ -104,7 +106,7 @@ public:
         randomize_parameters();
     }
 
-    void set_range(uint64_t m)
+    void set_range(uint32_t m)
     {
         this->m = m;
     }
@@ -119,13 +121,14 @@ public:
         b = dist(gen);
     }
 
-    uint64_t hash(const std::pair<uint32_t, bool> &item) const
+    uint32_t hash(const std::pair<uint32_t, bool> &item) const
     {
         return ((a * (item.first + item.second * m) + b) % p) % m;
     }
 
 private:
-    uint64_t a, b, p, m;
+    uint32_t m;
+    uint64_t a, b, p;
 };
 
 // Abstract base class template
@@ -150,7 +153,7 @@ public:
         randomize_parameters();
     }
 
-    void set_range(uint64_t m)
+    void set_range(uint32_t m)
     {
         modulus = m;
     }
@@ -167,7 +170,7 @@ public:
         }
     }
 
-    uint64_t hash(const uint32_t &item) const
+    uint32_t hash(const uint32_t &item) const
     {
         uint32_t x = item;
         uint64_t h = 0;
@@ -179,18 +182,18 @@ public:
             h ^= random_bits[(i << 8) + c];
         }
         h ^= x;
-        for (int i = 0; i < 3; ++i)
+        for (int i = 3; i < 8; ++i)
         {
             c = h;
             h >>= 8;
             h ^= random_bits[(i << 8) + c];
         }
-        return h % modulus;
+        return ((uint32_t)h) % modulus;
     }
 
 private:
     std::array<uint64_t, 8 * 256> random_bits;
-    uint64_t modulus;
+    uint32_t modulus;
 };
 
 #endif
