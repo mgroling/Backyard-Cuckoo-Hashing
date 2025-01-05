@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <array>
 #include <vector>
+#include <stdexcept>
 
 #include "hash.h"
 
@@ -38,6 +39,10 @@ public:
         if (contains(item))
         {
             return;
+        }
+        if (members > num_elements)
+        {
+            throw std::runtime_error("Constant Time Collection: too many elements inserted");
         }
 
         // find an empty spot for the element from the following options:

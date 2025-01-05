@@ -13,18 +13,16 @@ class QueueNode
 {
 public:
     T data;
-    QueueNode<T> *prev = nullptr;
-    QueueNode<T> *next = nullptr;
+    QueueNode<T> *prev;
+    QueueNode<T> *next;
     bool deleted;
 
-    QueueNode()
+    QueueNode() : data(T{}), prev(nullptr), next(nullptr), deleted(true)
     {
-        deleted = true;
     }
 
-    QueueNode(T data) : data(data)
+    QueueNode(T data) : data(data), prev(nullptr), next(nullptr), deleted(false)
     {
-        deleted = false;
     }
 };
 
@@ -143,16 +141,24 @@ public:
             int position = get_position(i, h[i].hash(item));
             if (!arrays[position].deleted && arrays[position].data == item)
             {
-                QueueNode<T> *QueueNode = &arrays[position];
-                QueueNode->deleted = true;
+                QueueNode<T> *node = &arrays[position];
+                node->deleted = true;
 
-                if (QueueNode->prev)
+                if (node == head)
                 {
-                    QueueNode->prev->next = QueueNode->next;
+                    head = node->next;
                 }
-                if (QueueNode->next)
+                if (node == tail)
                 {
-                    QueueNode->next->prev = QueueNode->prev;
+                    tail = node->prev;
+                }
+                if (node->prev)
+                {
+                    node->prev->next = node->next;
+                }
+                if (node->next)
+                {
+                    node->next->prev = node->prev;
                 }
                 return true;
             }
@@ -164,6 +170,25 @@ public:
     bool empty() const
     {
         return head == nullptr;
+    }
+
+    std::vector<T> to_vector() const
+    {
+        std::vector<T> items;
+        if (head && !head->deleted)
+        {
+            QueueNode<T> *node = head;
+            items.push_back(node->data);
+            while (node->next)
+            {
+                node = node->next;
+                if (!node->deleted)
+                {
+                    items.push_back(node->data);
+                }
+            }
+        }
+        return items;
     }
 
 private:
@@ -187,14 +212,14 @@ private:
         // collect all present elements in the data structure and set them as deleted
         if (head)
         {
-            QueueNode<T> *QueueNode = head;
-            QueueNode->deleted = true;
-            items.push_back(QueueNode->data);
-            while (QueueNode->next)
+            QueueNode<T> *node = head;
+            node->deleted = true;
+            items.push_back(node->data);
+            while (node->next)
             {
-                QueueNode = QueueNode->next;
-                QueueNode->deleted = true;
-                items.push_back(QueueNode->data);
+                node = node->next;
+                node->deleted = true;
+                items.push_back(node->data);
             }
         }
         if (!place_at_front)

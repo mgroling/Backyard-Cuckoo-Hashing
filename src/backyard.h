@@ -91,7 +91,10 @@ public:
 
     void insert(const T &item)
     {
-        queue.push_back({item, true});
+        if (!contains(item))
+        {
+            queue.push_back({item, true});
+        }
         std::optional<T> y;
         bool b = true;
         uint32_t hash = 0;
@@ -153,7 +156,7 @@ public:
 
 private:
     ConstantTimeQueue<std::pair<T, bool>, n_queue, k_queue> queue;
-    ConstantTimeCollection<std::pair<T, bool>, num_elems_cdm, n_cdm, k_cdm> cdm;
+    CycleDetectionMechanism<std::pair<T, bool>, num_elems_cdm, n_cdm, k_cdm> cdm;
     TornadoHash<T> bins_h;
     std::array<SimpleBin<T, bin_capacity>, num_bins> bins;
     std::array<TornadoHash<T>, 2> cuckoo_tables_h;

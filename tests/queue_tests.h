@@ -1,5 +1,8 @@
 #include <cassert>
 #include <cstdint>
+#include <deque>
+#include <unordered_set>
+#include <algorithm>
 #include "../src/queue.h"
 
 void test_queue_push_back()
@@ -109,4 +112,93 @@ void test_queue_rebuild()
     assert(front.has_value() && front.value() == 1);
 
     assert(queue.empty());
+}
+
+void test_queue_random_operations()
+{
+    constexpr int n = 1000;
+    constexpr int k = 20;
+    ConstantTimeQueue<uint32_t, n, k> custom_queue;
+    std::deque<uint32_t> ref_deque;
+
+    std::srand(42); // Seed the random number generator
+    constexpr int num_operations = 10000;
+
+    for (int i = 0; i < num_operations; ++i)
+    {
+        if (i == 24)
+        {
+            int x = 3;
+            int y = x + 3;
+        }
+        int operation = std::rand() % 6; // Random operation
+        int value = std::rand() % 100;   // Random value between 0 and 99
+        std::vector<uint32_t> custom_queue_as_vector = custom_queue.to_vector();
+        std::vector<uint32_t> ref_deque_as_vector(ref_deque.begin(), ref_deque.end());
+
+        if (operation == 0)
+        {
+            custom_queue.push_back(value);
+            ref_deque.push_back(value);
+        }
+        else if (operation == 1)
+        {
+            custom_queue.push_front(value);
+            ref_deque.push_front(value);
+        }
+        else if (operation == 2)
+        {
+            if (!ref_deque.empty())
+            {
+                auto custom_value = custom_queue.pop_front();
+                uint32_t ref_value = ref_deque.front();
+                ref_deque.pop_front();
+
+                assert(custom_value.has_value() && custom_value.value() == ref_value);
+            }
+            else
+            {
+                assert(!custom_queue.pop_front().has_value());
+            }
+        }
+        else if (operation == 3)
+        {
+            bool custom_contains = custom_queue.contains(value);
+            bool ref_contains = std::find(ref_deque.begin(), ref_deque.end(), value) != ref_deque.end();
+
+            assert(custom_contains == ref_contains);
+        }
+        else if (operation == 4)
+        {
+            bool custom_removed = custom_queue.remove(value);
+            std::vector<uint32_t> after_removal_custom = custom_queue.to_vector();
+            std::vector<uint32_t> before_removal_ref(ref_deque.begin(), ref_deque.end());
+            bool ref_removed = std::find(ref_deque.begin(), ref_deque.end(), value) != ref_deque.end();
+            if (ref_removed)
+            {
+                for (int j = 0; j < before_removal_ref.size(); ++j)
+                {
+                    if (j == after_removal_custom.size() || before_removal_ref[j] != after_removal_custom[j])
+                    {
+                        assert(before_removal_ref[j] == value);
+                        ref_deque.erase(ref_deque.begin() + j);
+                        break;
+                    }
+                }
+            }
+
+            assert(custom_removed == ref_removed);
+        }
+        else if (operation == 5)
+        {
+            bool custom_empty = custom_queue.empty();
+            bool ref_empty = ref_deque.empty();
+
+            assert(custom_empty == ref_empty);
+        }
+
+        std::vector<uint32_t> custom_queue_as_vector_2 = custom_queue.to_vector();
+        std::vector<uint32_t> ref_deque_as_vector_2(ref_deque.begin(), ref_deque.end());
+        assert(custom_queue_as_vector_2 == ref_deque_as_vector_2);
+    }
 }
