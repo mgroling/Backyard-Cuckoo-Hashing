@@ -32,6 +32,7 @@ class ConstantTimeQueue
 public:
     ConstantTimeQueue()
     {
+        _size = 0;
         for (int i = 0; i < k; ++i)
         {
             h[i].set_range(n);
@@ -48,6 +49,7 @@ public:
             if (arrays[position].deleted)
             {
                 arrays[position] = QueueNode<T>(item);
+                ++_size;
 
                 if (tail)
                 {
@@ -77,6 +79,7 @@ public:
             if (arrays[position].deleted)
             {
                 arrays[position] = QueueNode<T>(item);
+                ++_size;
 
                 if (head)
                 {
@@ -117,6 +120,7 @@ public:
             tail = nullptr;
         }
 
+        --_size;
         return item;
     }
 
@@ -160,6 +164,7 @@ public:
                 {
                     node->next->prev = node->prev;
                 }
+                --_size;
                 return true;
             }
         }
@@ -170,6 +175,11 @@ public:
     bool empty() const
     {
         return head == nullptr;
+    }
+
+    int size() const
+    {
+        return _size;
     }
 
     std::vector<T> to_vector() const
@@ -196,6 +206,7 @@ private:
     std::array<CarterWegmanHash<T>, k> h;
     QueueNode<T> *head = nullptr;
     QueueNode<T> *tail = nullptr;
+    int _size;
 
     int get_position(int num_array, int array_index) const
     {
@@ -233,6 +244,7 @@ private:
         }
         head = nullptr;
         tail = nullptr;
+        _size = 0;
 
         // insert all elements into the data structure again (with new seed), this may call rebuild again
         for (const T &elem : items)

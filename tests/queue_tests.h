@@ -51,6 +51,7 @@ void test_queue_contains()
     queue.push_back(5);
     queue.push_front(3);
 
+    assert(queue.size() == 2);
     assert(queue.contains(5));
     assert(queue.contains(3));
     assert(!queue.contains(1)); // Item 1 was never added
@@ -62,6 +63,7 @@ void test_queue_remove()
     queue.push_back(10);
     queue.push_back(20);
 
+    assert(queue.size() == 2);
     assert(queue.contains(10));
     assert(queue.remove(10));
     assert(!queue.contains(10)); // 10 should be removed
@@ -90,6 +92,7 @@ void test_queue_rebuild()
     queue.push_front(4);
     queue.push_front(5);
     queue.push_front(6);
+    assert(queue.size() == 6);
 
     assert(queue.contains(1));
     assert(queue.contains(2));
@@ -200,5 +203,6 @@ void test_queue_random_operations()
         std::vector<uint32_t> custom_queue_as_vector_2 = custom_queue.to_vector();
         std::vector<uint32_t> ref_deque_as_vector_2(ref_deque.begin(), ref_deque.end());
         assert(custom_queue_as_vector_2 == ref_deque_as_vector_2);
+        assert(custom_queue.size() == ref_deque.size());
     }
 }
