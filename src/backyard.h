@@ -29,13 +29,13 @@ template <typename T, int num_bins, int bin_capacity, int size_cuckoo_tables, in
 class BackyardCuckooHashing
 {
 public:
-    BackyardCuckooHashing(int insert_loop_iterations)
+    BackyardCuckooHashing(int insert_loop_iterations) : insert_loop_iterations(insert_loop_iterations)
     {
-        this->insert_loop_iterations = insert_loop_iterations;
         bins.fill(SimpleBin<T, bin_capacity>{});
         bins_h.set_range(num_bins);
         cuckoo_tables_h[0].set_range(size_cuckoo_tables);
         cuckoo_tables_h[1].set_range(size_cuckoo_tables);
+        _size = 0;
     }
 
     bool contains(const T &item) const
@@ -64,26 +64,31 @@ public:
     {
         if (bins[bins_h.hash(item)].remove(item))
         {
+            --_size;
             return true;
         }
         uint32_t hash = cuckoo_tables_h[0].hash(item);
         if (cuckoo_tables[0][hash] == item)
         {
+            --_size;
             cuckoo_tables[0][hash].reset();
             return true;
         }
         hash = cuckoo_tables_h[1].hash(item);
         if (cuckoo_tables[1][hash] == item)
         {
+            --_size;
             cuckoo_tables[1][hash].reset();
             return true;
         }
         if (queue.remove({item, true}))
         {
+            --_size;
             return true;
         }
         if (queue.remove({item, false}))
         {
+            --_size;
             return true;
         }
         return false;
@@ -94,6 +99,7 @@ public:
         if (!contains(item))
         {
             queue.push_back({item, true});
+            ++_size;
         }
         std::optional<T> y;
         bool b = true;
@@ -154,6 +160,11 @@ public:
         }
     }
 
+    int size()
+    {
+        return _size;
+    }
+
 private:
     ConstantTimeQueue<std::pair<T, bool>, n_queue, k_queue> queue;
     CycleDetectionMechanism<std::pair<T, bool>, num_elems_cdm, n_cdm, k_cdm> cdm;
@@ -162,6 +173,7 @@ private:
     std::array<TornadoHash<T>, 2> cuckoo_tables_h;
     std::array<std::array<std::optional<T>, size_cuckoo_tables>, 2> cuckoo_tables;
     int insert_loop_iterations;
+    int _size;
 };
 
 #endif

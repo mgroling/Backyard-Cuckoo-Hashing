@@ -6,10 +6,11 @@
 #include <random>
 #include "large_primes.h"
 
+// Define a static random number generator with a fixed seed to be able to reproduce results.
+static std::mt19937_64 gen(42);
+
 uint64_t sample_prime()
 {
-    std::random_device rd;
-    std::mt19937 gen(rd());
     std::uniform_int_distribution<size_t> distr(0, num_primes - 1);
     return large_primes[distr(gen)];
 }
@@ -44,8 +45,6 @@ public:
     void randomize_parameters()
     {
         p = sample_prime();
-        std::random_device rd;
-        std::mt19937_64 gen(rd());
         std::uniform_int_distribution<uint64_t> dist(1, p - 1);
         a = dist(gen);
         b = dist(gen);
@@ -79,8 +78,6 @@ public:
     void randomize_parameters()
     {
         p = sample_prime();
-        std::random_device rd;
-        std::mt19937_64 gen(rd());
         std::uniform_int_distribution<uint64_t> dist(1, p - 1);
         a = dist(gen);
         b = dist(gen);
@@ -114,8 +111,6 @@ public:
     void randomize_parameters()
     {
         p = sample_prime();
-        std::random_device rd;
-        std::mt19937_64 gen(rd());
         std::uniform_int_distribution<uint64_t> dist(1, p - 1);
         a = dist(gen);
         b = dist(gen);
@@ -160,8 +155,6 @@ public:
 
     void randomize_parameters()
     {
-        std::random_device rd;
-        std::mt19937_64 gen(rd());
         std::uniform_int_distribution<uint64_t> dist(0, UINT64_MAX);
 
         for (uint64_t &elem : random_bits)

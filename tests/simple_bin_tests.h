@@ -72,3 +72,7 @@ void test_simple_bin_remove_all()
     assert(bin.remove(30));
     assert(bin.size() == 0);
 }
+
+void test_simple_bin_random_operations()
+{
+}

@@ -1,6 +1,7 @@
 #include <cassert>
 #include <cstddef>
 #include <cstdint>
+#include <unordered_set>
 #include "../src/cdm.h"
 
 void test_cdm_insert_and_contains_three_times_checked()
@@ -176,5 +177,52 @@ void test_collection_alternating_inserts_and_recollections()
         {
             assert(!collection.contains(i + round * 10));
         }
+    }
+}
+
+void test_collection_random_operations()
+{
+    constexpr int num_elements = 10000;
+    constexpr int n = 1000;
+    constexpr int k = 20;
+    ConstantTimeCollection<uint32_t, num_elements, n, k> custom_collection;
+    std::unordered_set<uint32_t> reference_set;
+
+    std::srand(42);
+    constexpr int num_operations = 10000;
+
+    for (int i = 0; i < num_operations; ++i)
+    {
+        int operation = std::rand() % 500;  // 0-250 = insert, 251-498 = contains, 499 = reset
+        uint32_t value = std::rand() % 100; // Random value between 0 and 99.
+
+        if (operation <= 250)
+        {
+            custom_collection.insert(value);
+            reference_set.insert(value);
+            for (const uint32_t &elem : reference_set)
+            {
+                assert(custom_collection.contains(elem));
+            }
+        }
+        else if (operation <= 498)
+        {
+            bool custom_contains = custom_collection.contains(value);
+            bool reference_contains = reference_set.count(value) > 0;
+            assert(custom_contains == reference_contains);
+        }
+        else
+        {
+            custom_collection.reset();
+            reference_set.clear();
+
+            assert(custom_collection.empty());
+            assert(reference_set.empty());
+        }
+
+        // Verify that `contains` and `empty` are consistent with the reference set.
+        bool custom_empty = custom_collection.empty();
+        bool reference_empty = reference_set.empty();
+        assert(custom_empty == reference_empty);
     }
 }

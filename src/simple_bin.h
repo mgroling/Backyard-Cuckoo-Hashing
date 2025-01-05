@@ -28,7 +28,7 @@ public:
     {
         for (int i = 0; i < capacity; ++i)
         {
-            if (elems[i] == item)
+            if (!deleted[i] && elems[i] == item)
             {
                 deleted[i] = true;
                 num_elems--;
