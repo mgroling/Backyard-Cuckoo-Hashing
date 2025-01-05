@@ -31,8 +31,7 @@ class BackyardCuckooHashing
 public:
     BackyardCuckooHashing(int insert_loop_iterations) : insert_loop_iterations(insert_loop_iterations)
     {
-        bins.fill(SimpleBin<T, bin_capacity>{});
-        bins_h.set_range(num_bins);
+        bins = SimpleBinCollection<T, num_bins, bin_capacity>();
         cuckoo_tables_h[0].set_range(size_cuckoo_tables);
         cuckoo_tables_h[1].set_range(size_cuckoo_tables);
         _size = 0;
@@ -40,21 +39,7 @@ public:
 
     bool contains(const T &item) const
     {
-        T temp1;
-        T temp2;
-        if (cuckoo_tables[0][cuckoo_tables_h[0].hash(item)].has_value())
-        {
-            temp1 = cuckoo_tables[0][cuckoo_tables_h[0].hash(item)].value();
-        }
-        if (cuckoo_tables[1][cuckoo_tables_h[1].hash(item)].has_value())
-        {
-            temp2 = cuckoo_tables[1][cuckoo_tables_h[1].hash(item)].value();
-        }
-        bool isContained = bins[bins_h.hash(item)].contains(item) ||
-                           cuckoo_tables[0][cuckoo_tables_h[0].hash(item)] == item ||
-                           cuckoo_tables[1][cuckoo_tables_h[1].hash(item)] == item ||
-                           queue.contains({item, true}) || queue.contains({item, false});
-        return bins[bins_h.hash(item)].contains(item) ||
+        return bins.contains(item) ||
                cuckoo_tables[0][cuckoo_tables_h[0].hash(item)] == item ||
                cuckoo_tables[1][cuckoo_tables_h[1].hash(item)] == item ||
                queue.contains({item, true}) || queue.contains({item, false});
@@ -62,7 +47,7 @@ public:
 
     bool remove(const T &item)
     {
-        if (bins[bins_h.hash(item)].remove(item))
+        if (bins.remove(item))
         {
             --_size;
             return true;
@@ -119,10 +104,8 @@ public:
                     b = temp.second;
                 }
             }
-            hash = bins_h.hash(y.value());
-            if (bins[hash].has_space()) // bin has space, move element to first level
+            if (bins.insert(y.value()))
             {
-                bins[hash].insert(y.value());
                 y.reset();
             }
             else
@@ -168,8 +151,7 @@ public:
 private:
     ConstantTimeQueue<std::pair<T, bool>, n_queue, k_queue> queue;
     CycleDetectionMechanism<std::pair<T, bool>, num_elems_cdm, n_cdm, k_cdm> cdm;
-    TornadoHash<T> bins_h;
-    std::array<SimpleBin<T, bin_capacity>, num_bins> bins;
+    SimpleBinCollection<T, num_bins, bin_capacity> bins;
     std::array<TornadoHash<T>, 2> cuckoo_tables_h;
     std::array<std::array<std::optional<T>, size_cuckoo_tables>, 2> cuckoo_tables;
     int insert_loop_iterations;
