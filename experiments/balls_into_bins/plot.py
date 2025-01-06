@@ -72,4 +72,3 @@ plt.legend(handles=lines[::-1], labels=labels[::-1], title="Load Factor")
 
 # Save and show the plot with the filename "plot.png" in the specified folder
 plt.savefig(folder + "plot.png", dpi=300)
-plt.show()

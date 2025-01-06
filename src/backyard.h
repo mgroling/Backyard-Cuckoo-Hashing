@@ -148,7 +148,6 @@ public:
         return _size;
     }
 
-private:
     ConstantTimeQueue<std::pair<T, bool>, n_queue, k_queue> queue;
     CycleDetectionMechanism<std::pair<T, bool>, num_elems_cdm, n_cdm, k_cdm> cdm;
     SimpleBinCollection<T, num_bins, bin_capacity> bins;
@@ -156,6 +155,8 @@ private:
     std::array<std::array<std::optional<T>, size_cuckoo_tables>, 2> cuckoo_tables;
     int insert_loop_iterations;
     int _size;
+
+private:
 };
 
 #endif

@@ -220,9 +220,6 @@ void test_collection_random_operations()
             assert(reference_set.empty());
         }
 
-        // Verify that `contains` and `empty` are consistent with the reference set.
-        bool custom_empty = custom_collection.empty();
-        bool reference_empty = reference_set.empty();
-        assert(custom_empty == reference_empty);
+        assert(custom_collection.size() == reference_set.size());
     }
 }

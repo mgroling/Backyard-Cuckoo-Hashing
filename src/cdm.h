@@ -98,6 +98,11 @@ public:
         return !members;
     }
 
+    int size() const
+    {
+        return members;
+    }
+
 private:
     int members = 0;
     std::array<CdmNode<T>, num_elements> elements;
@@ -167,6 +172,11 @@ public:
     {
         collection.reset();
         duplicate = false;
+    }
+
+    int size() const
+    {
+        return collection.size();
     }
 
 private:
