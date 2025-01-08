@@ -2,5 +2,6 @@
 /.venv
 
 src/*.cpp
+experiments/auxiliary_structures_size/data/*.csv
 *.a
 **/main

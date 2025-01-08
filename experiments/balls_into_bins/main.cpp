@@ -113,7 +113,7 @@ int main()
     std::vector<int> bin_capacities{1, 2, 4, 6, 8, 12, 16, 24, 32, 48, 64};
     std::vector<double> load_factors{1.0, 0.95, 0.9, 0.8};
 
-    std::vector<uint32_t> input_sequence = create_divides_by_sequence(num_elements, 7);
+    std::vector<uint32_t> input_sequence = create_random_input_sequence(num_elements, 42);
 
     for (double load_factor : load_factors)
     {
