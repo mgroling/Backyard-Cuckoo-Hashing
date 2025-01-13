@@ -22,8 +22,8 @@ def plot_max_queue_size(bin_capacity):
     plt.yticks(range(0, int(max_pivot.max().max()) + 51, 50))
     plt.xticks(range(8400, 10001, 100))
     plt.xlim((8400, 10000))
-    plt.xlabel('Number of Elements Inserted Into Backyard Construction')
-    plt.ylabel('Maximum Queue Size over Repetitions')
+    plt.xlabel('Number of Elements Inserted Into Backyard Construction', fontsize = 12)
+    plt.ylabel('Maximum Queue Size over Repetitions', fontsize = 12)
     plt.legend()
     plt.grid(True)
 
@@ -73,4 +73,4 @@ def plot_mean_queue_size(bin_capacity):
 if __name__ == "__main__":
     for bin_capacity in [1, 2, 4, 6, 8, 12, 16, 24, 32, 48, 64]:
         plot_max_queue_size(bin_capacity)
-        plot_mean_queue_size(bin_capacity)
+        # plot_mean_queue_size(bin_capacity)
